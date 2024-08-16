@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { DB_NAME } from "./constants";
 
 type ConnectObject = {
   isConnected?: number;
@@ -13,7 +14,10 @@ async function dbConnect(): Promise<void> {
   }
 
   try {
-    const db = await mongoose.connect(process.env.MONGODB_URI || "", {});
+    const db = await mongoose.connect(
+      `${process.env.MONGODB_URI}/${DB_NAME} ` || "",
+      {}
+    );
 
     connection.isConnected = db.connections[0].readyState;
 
