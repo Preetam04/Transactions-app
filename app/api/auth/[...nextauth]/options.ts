@@ -12,8 +12,7 @@ export const authOptions: NextAuthOptions = {
       id: "credentials",
       name: "Credentials",
       credentials: {
-        username: { label: "Username", type: "text", placeholder: "johndoe" },
-        Email: {
+        email: {
           label: "Email",
           type: "email",
           placeholder: "example@gmai.com",
@@ -25,13 +24,10 @@ export const authOptions: NextAuthOptions = {
 
         await dbConnect();
         try {
+          // console.log(credentials);
+
           const user = await User.findOne({
-            $or: [
-              {
-                email: credentials.identifier.email,
-                username: credentials.identifier.username,
-              },
-            ],
+            email: credentials.email,
           });
 
           if (!user) {
@@ -55,8 +51,28 @@ export const authOptions: NextAuthOptions = {
       },
     }),
   ],
+  pages: {
+    signIn: "/signin",
+  },
   session: {
     strategy: "jwt",
   },
   secret: process.env.NEXTAUTH_SECRET,
+
+  callbacks: {
+    async session({ session, token }) {
+      if (token) {
+        session.user._id = token._id;
+        session.user.username = token.username;
+      }
+      return session;
+    },
+    async jwt({ token, user }) {
+      if (user) {
+        token._id = user._id?.toString();
+        token.username = user.username;
+      }
+      return token;
+    },
+  },
 };
