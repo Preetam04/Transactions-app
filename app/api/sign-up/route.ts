@@ -1,6 +1,8 @@
 import dbConnect from "@/lib/dbConnect";
+import Account from "@/models/Account.model";
 import User from "@/models/Users.model";
 import bcrypt from "bcryptjs";
+import mongoose from "mongoose";
 
 export async function POST(request: Request) {
   await dbConnect();
@@ -51,6 +53,13 @@ export async function POST(request: Request) {
     });
 
     await newUser.save();
+
+    const userAccount = await new Account({
+      user: newUser._id,
+      balance: 1000000,
+    });
+
+    userAccount.save();
 
     return Response.json(
       {

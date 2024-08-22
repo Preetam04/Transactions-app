@@ -7,8 +7,8 @@ const AccountSchema = new mongoose.Schema({
     ref: "User",
     required: true,
   },
-  amount: {
-    type: String,
+  balance: {
+    type: Number,
     required: true,
   },
 });

@@ -11,7 +11,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { toast } from "@/components/ui/use-toast";
+import { useToast } from "@/components/ui/use-toast";
 import { signUpSchema } from "@/lib/verificationSchemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
@@ -40,6 +40,7 @@ const Signup = () => {
   //     lastName: "",
   //     firstName: ""
   //   },
+  const { toast } = useToast();
 
   const router = useRouter();
 
@@ -50,12 +51,14 @@ const Signup = () => {
       const response = await axios.post("/api/sign-up", values);
 
       toast({
-        title: "Success",
-        description: response?.data.message,
+        title: "User Created Successfully",
       });
 
       router.replace("/sign-in");
     } catch (error) {
+      toast({
+        title: "Error creating User",
+      });
       console.log(error);
     }
   };

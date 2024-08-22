@@ -11,6 +11,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { useToast } from "@/components/ui/use-toast";
 import { signInSchema } from "@/lib/verificationSchemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSession, signIn, signOut } from "next-auth/react";
@@ -32,23 +33,31 @@ const SignIn = () => {
 
   const router = useRouter();
 
+  const { toast } = useToast();
+
   const onSubmit = async (values: z.infer<typeof signInSchema>) => {
     // event.preventDefault()
     console.log(values);
 
     const res = await signIn("credentials", {
-      redirect: true,
+      redirect: false,
       email: values.email,
       password: values.password,
     });
 
-    // log(res);
-    console.log(res);
-
     if (res?.error) {
       console.log(res?.error);
+      toast({
+        title: res?.error,
+      });
     } else {
-      router.push("/dashboard"); // Redirect to a protected page upon successful login
+      // Redirect to a protected page upon successful login
+      console.log(res);
+
+      toast({
+        title: "User Signed In Successfully",
+      });
+      router.push("/dashboard");
     }
 
     // try {

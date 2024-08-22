@@ -13,7 +13,7 @@ const TransactionSchema = new mongoose.Schema(
       required: true,
     },
     amount: {
-      type: String,
+      type: Number,
       required: true,
     },
   },
@@ -21,3 +21,9 @@ const TransactionSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+
+const Transaction =
+  mongoose.models.Transaction ||
+  mongoose.model("Transaction", TransactionSchema);
+
+export default Transaction;
