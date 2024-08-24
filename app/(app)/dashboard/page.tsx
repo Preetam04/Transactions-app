@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import formatCurrency from "@/lib/formatCurrency";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
 const Dashboard = () => {
@@ -11,6 +12,8 @@ const Dashboard = () => {
   const [user, setUser] = useState({});
   const [loader, setLoader] = useState(true);
   const [allUser, setAllUser] = useState([]);
+
+  const router = useRouter();
 
   // const session = await getServerSession(authOptions);
   const getUserDetails = async () => {
@@ -29,19 +32,23 @@ const Dashboard = () => {
   const getAllUsers = async () => {
     try {
       const response = await axios.get("/api/get-all-users");
-      console.log(response.data.data);
+      // console.log(response.data.data);
       setAllUser(response.data.data);
     } catch (error) {
       console.log(error);
     }
   };
 
-  console.log(allUser);
+  // console.log(allUser);
 
   useEffect(() => {
     getUserDetails();
     getAllUsers();
   }, []);
+
+  const handleNavigation = (data) => {
+    router.push(`/send-money/${data?._id}`);
+  };
 
   return loader ? (
     <div className="">loader</div>
@@ -81,7 +88,13 @@ const Dashboard = () => {
                       <p className="text-sm text-gray-600 -my-1">{ele.email}</p>
                     </div>{" "}
                   </div>
-                  <Button>Send Money</Button>
+                  <Button
+                    onClick={() => {
+                      handleNavigation(ele);
+                    }}
+                  >
+                    Send Money
+                  </Button>
                 </div>
               </div>
             ))}
